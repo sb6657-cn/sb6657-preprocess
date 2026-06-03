@@ -72,13 +72,14 @@ export default function ExcelParser() {
                         上传Excel
                     </Button>
                 </Upload>
+                <div className={styles.formTitle}>补充信息</div>
                 <div className={styles.additional}>
                     <span className={styles.title}>标题:</span>
-                    <Input size="small" value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <Input size="small" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="如: Spirit冠军 | PGL阿斯塔纳2026" />
                 </div>
                 <div className={styles.additional}>
                     <span className={styles.title}>日期:</span>
-                    <Input size="small" value={date} onChange={(e) => setDate(e.target.value)} />
+                    <Input size="small" value={date} onChange={(e) => setDate(e.target.value)} placeholder="如: 2026-05-17" />
                 </div>
             </div>
             <ArrowRightOutlined className={styles.rightArrow} />
