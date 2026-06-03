@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import Home from '@/pages/Home/Home';
-import WarriorsDonk from '@/pages/15warriorsDonk/15warriorsDonk';
+import Warriors15Donk from '@/pages/15WarriorsDonk/15WarriorsDonk';
 
 // 应对github page之类的重定向
 const redirect = sessionStorage.getItem('spa_redirect');
@@ -18,7 +18,7 @@ export const router = createBrowserRouter(
         },
         {
             path: '/15warriorsDonk',
-            element: <WarriorsDonk />,
+            element: <Warriors15Donk />,
         },
     ],
     {
