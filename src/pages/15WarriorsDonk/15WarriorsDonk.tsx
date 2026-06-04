@@ -7,10 +7,8 @@ import { useState } from 'react';
 export default function Warriors15Donk() {
 
     const [parsedData, setParsedData] = useState<WarriorsDonk>();
-    function syncAndPreview(data: WarriorsDonk){
+    function syncAndPreview(data?: WarriorsDonk){
         setParsedData(data);
-        console.log('syncAndPreview', data);
-        // todo 启动内嵌iframe的预览
     }
 
     return (

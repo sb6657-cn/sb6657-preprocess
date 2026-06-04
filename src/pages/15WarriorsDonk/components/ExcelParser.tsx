@@ -10,7 +10,7 @@ import { useState } from 'react';
 import styles from './ExcelParser.module.scss';
 
 interface ExcelParserProps {
-    onSyncAndPreview: (data: WarriorsDonk) => void;
+    onSyncAndPreview: (data?: WarriorsDonk) => void;
 }
 
 export default function ExcelParser(props: ExcelParserProps) {
