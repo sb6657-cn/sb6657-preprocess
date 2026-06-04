@@ -43,6 +43,7 @@ export default function ExcelParser(props: ExcelParserProps) {
     function handleRemove(file: UploadFile) {
         setFileList((current) => current.filter((item) => item.uid !== file.uid));
         setParsedData(undefined);
+        onSyncAndPreview(undefined);
         setParsing(false);
     }
     function handleBeforeUpload(file: UploadFile) {
