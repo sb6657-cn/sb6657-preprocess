@@ -1,4 +1,5 @@
 import Warriors15Donk from '@/pages/15WarriorsDonk/15WarriorsDonk';
+import ApiCatalog from '@/pages/ApiCatalog/ApiCatalog';
 import Home from '@/pages/Home/Home';
 import { createBrowserRouter } from 'react-router';
 
@@ -19,6 +20,10 @@ export const router = createBrowserRouter(
         {
             path: '/15warriorsDonk',
             element: <Warriors15Donk />,
+        },
+        {
+            path: '/apiCatalog',
+            element: <ApiCatalog />,
         },
     ],
     {

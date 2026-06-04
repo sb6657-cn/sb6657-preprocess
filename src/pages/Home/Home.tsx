@@ -12,6 +12,9 @@ export default function Home() {
                 <Link to="/15warriorsDonk">
                     <span className={styles.linkText}>布雷德十五勇士excel数据解析</span>
                 </Link>
+                <Link to="/apiCatalog">
+                    <span className={styles.linkText}>sb6657 开源接口一览</span>
+                </Link>
             </div>
         </div>
     );
