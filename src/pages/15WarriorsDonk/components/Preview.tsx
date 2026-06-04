@@ -45,7 +45,7 @@ export default function Preview(props: PreviewProps) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.title}>sb6657.cn 实时预览</div>
+            <div className={styles.title}>sb6657.cn 实时预览↓</div>
             <div className={styles.previewContainer}>
                 <iframe ref={iframeRef} title="sb6657-preview" src={PREVIEW_URL} className={styles.previewIframe} />
             </div>

@@ -13,6 +13,7 @@ export default function Warriors15Donk() {
     return (
         <div className={styles.container}>
             <div className={styles.title}>
+                <p className={styles.eyebrow}>EXCEL TO JSON</p>
                 <div className={styles.mainTitle}>布雷德十五勇士excel数据解析</div>
                 <div className={styles.subTitle}>大佬提供的excel → 网站用json</div>
             </div>

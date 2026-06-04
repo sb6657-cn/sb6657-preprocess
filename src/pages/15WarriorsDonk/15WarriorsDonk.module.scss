@@ -1,4 +1,4 @@
-.container{
+.container {
     height: 100%;
     width: 100%;
     display: flex;
@@ -6,17 +6,24 @@
     align-items: center;
     min-height: 0;
     overflow: hidden;
-    .title{
+
+    .title {
         padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        .mainTitle{
+        .eyebrow {
+            width: 100%;
+            color: #6f7f8f;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .mainTitle {
             font-size: xx-large;
             font-weight: 400;
             color: #f33;
         }
-        .subTitle{
+        .subTitle {
             font-size: small;
             color: gray;
         }
