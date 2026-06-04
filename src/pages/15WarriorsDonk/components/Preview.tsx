@@ -1,7 +1,7 @@
 import styles from './Preview.module.scss';
 import type { WarriorsDonk } from '@/types/15WarriorsDonk';
 interface PreviewProps {
-    parsedData: WarriorsDonk;
+    parsedData?: WarriorsDonk;
 }
 
 export default function Preview(props: PreviewProps) {
