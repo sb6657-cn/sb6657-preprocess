@@ -1,6 +1,6 @@
 .container {
     padding: 20px 40px;
-    border: grey solid 1px;
+    border: #d1d9e0 solid 1px;
     border-radius: 10px;
     .uploadAndDownload {
         display: flex;
@@ -35,10 +35,9 @@
             font-size: 40px;
         }
     }
-}
-
-.previewContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    .previewContainer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
 }

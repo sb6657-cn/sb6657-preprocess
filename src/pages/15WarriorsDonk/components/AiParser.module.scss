@@ -1,0 +1,16 @@
+.container1 {
+    position: relative;
+    .container2 {
+        padding: 20px 40px;
+        border: #f3f3f3 solid 1px;
+        border-radius: 10px;
+        .ApiInputContainer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            .ApiInputTitle {
+                white-space: nowrap;
+            }
+        }
+    }
+}
