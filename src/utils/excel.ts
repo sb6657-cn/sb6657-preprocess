@@ -1,7 +1,7 @@
 import type { WarriorsDonk } from '@/types/15WarriorsDonk';
 import * as XLSX from 'xlsx';
 
-export async function parseExcelFile(file: File): Promise<WarriorsDonk> {
+export async function excelToArrarys(file: File) {
     const buffer = await file.arrayBuffer();
 
     const workbook = XLSX.read(buffer, {
@@ -14,6 +14,12 @@ export async function parseExcelFile(file: File): Promise<WarriorsDonk> {
         header: 1,
         defval: '',
     }) as any[][];
+
+    return rows;
+}
+
+export async function parseExcelFile(file: File): Promise<WarriorsDonk> {
+    const rows = await excelToArrarys(file);
 
     const resultObj: WarriorsDonk = {
         match: { title: '', date: '' },

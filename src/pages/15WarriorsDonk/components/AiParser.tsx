@@ -1,8 +1,14 @@
-import type { WarriorsDonk } from '@/types/15WarriorsDonk';
-import { BorderBeam, Input, Divider, Button } from 'antd';
-import styles from './AiParser.module.scss';
 import { oceanColors } from '@/static/colors';
+import type { WarriorsDonk } from '@/types/15WarriorsDonk';
+import { warriors15Aiparser } from '@/utils/aiParser';
+import { excelToArrarys } from '@/utils/excel';
+import { downloadJson } from '@/utils/json';
+import { ArrowRightOutlined, DownloadOutlined, EyeOutlined, UploadOutlined } from '@ant-design/icons';
+import type { UploadFile } from 'antd';
+import { BorderBeam, Button, Divider, Input, message, Upload } from 'antd';
+import type { RcFile } from 'antd/es/upload';
 import { useState } from 'react';
+import styles from './AiParser.module.scss';
 
 interface AiParserProps {
     onSyncAndPreview: (data?: WarriorsDonk) => void;
@@ -10,12 +16,82 @@ interface AiParserProps {
 
 export default function AiParser(props: AiParserProps) {
     const { onSyncAndPreview } = props;
+    // ai的api key
     const [apiKey, setApiKey] = useState('');
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [messageApi, contextHolder] = message.useMessage();
+    const excelFile = fileList[0];
+    const [parsing, setParsing] = useState(false);
+    const [parsedData, setParsedData] = useState<WarriorsDonk>();
+    const beforeOpenFile = fileList.length < 1 && !!apiKey;
+    // 输入框填写的标题和日期
+    const [title, setTitle] = useState('');
+    const [date, setDate] = useState('');
 
-    console.log(111, apiKey);
+    // 解析excel相关函数
+    async function parseExcel(file: File) {
+        if (!file || parsing || !apiKey) return;
+        setParsing(true);
+
+        const arraysExcel = await excelToArrarys(file);
+        console.log(2222, arraysExcel);
+        const jsonData = await warriors15Aiparser(apiKey, arraysExcel);
+        setParsedData(jsonData);
+        setParsing(false);
+    }
+
+    // 上传按钮组件相关函数
+    function handleUploadButtonClick() {
+        if (fileList.length > 0) {
+            messageApi.warning('一次只能转换一个文件，请删除当前文件再上传');
+        }
+        if (!apiKey) {
+            messageApi.warning('请先填写API Key');
+        }
+    }
+    function handleRemove(file: UploadFile) {
+        setFileList((current) => current.filter((item) => item.uid !== file.uid));
+        setParsedData(undefined);
+        onSyncAndPreview(undefined);
+        setParsing(false);
+    }
+    function handleBeforeUpload(file: UploadFile) {
+        if (file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+            messageApi.error('请上传正确的文件格式，此处只支持.xlsx');
+            return Upload.LIST_IGNORE;
+        }
+        setFileList([...fileList, file]);
+        parseExcel(file as RcFile);
+        return false;
+    }
+
+    // 下载按钮
+    function downloadFile() {
+        if (!parsedData) {
+            messageApi.error('未找到已解析文件');
+            return;
+        }
+        const currentJson = structuredClone(parsedData);
+        currentJson.match.title = title;
+        currentJson.match.date = date;
+        downloadJson(currentJson, '15warriorsDonk_2026.json');
+    }
+
+    // 预览按钮
+    function handlePreview() {
+        if (!parsedData) {
+            messageApi.error('没有解析数据，无法预览');
+            return;
+        }
+        const currentJson = structuredClone(parsedData);
+        currentJson.match.title = title;
+        currentJson.match.date = date;
+        onSyncAndPreview(currentJson);
+    }
 
     return (
         <div className={styles.container1}>
+            {contextHolder}
             <BorderBeam color={oceanColors}>
                 <div className={styles.container2}>
                     <div className={styles.ApiInputContainer}>
@@ -23,6 +99,41 @@ export default function AiParser(props: AiParserProps) {
                         <Input className={styles.ApiInput} placeholder="sk-xxxxxxxx" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
                     </div>
                     <Divider />
+                    <div className={styles.uploadAndDownload}>
+                        <div className={styles.upload}>
+                            <div className={styles.tips}>仅支持 .xlsx 文件，一次只能处理一个文件</div>
+                            <Upload fileList={fileList} maxCount={1} onRemove={handleRemove} beforeUpload={handleBeforeUpload} openFileDialogOnClick={beforeOpenFile}>
+                                <Button icon={<UploadOutlined />} onClick={handleUploadButtonClick}>
+                                    上传Excel
+                                </Button>
+                            </Upload>
+                            <div className={styles.formTitle}>补充信息</div>
+                            <div className={styles.additional}>
+                                <span className={styles.title}>标题:</span>
+                                <Input size="small" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="如: Spirit冠军 | PGL阿斯塔纳2026" />
+                            </div>
+                            <div className={styles.additional}>
+                                <span className={styles.title}>日期:</span>
+                                <Input size="small" value={date} onChange={(e) => setDate(e.target.value)} placeholder="如: 2026-05-17" />
+                            </div>
+                        </div>
+                        <ArrowRightOutlined className={styles.rightArrow} />
+                        <div className={styles.download}>
+                            {!excelFile && <span>请上传 .xlsx 文件</span>}
+                            {parsing && <span>正在解析 Excel...大模型输出较慢请耐心等待</span>}
+                            {!parsing && parsedData && (
+                                <Button icon={<DownloadOutlined />} onClick={downloadFile}>
+                                    下载json
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={styles.previewContainer}>
+                        <Button icon={<EyeOutlined />} onClick={handlePreview}>
+                            实时预览
+                        </Button>
+                    </div>
                 </div>
             </BorderBeam>
         </div>
