@@ -33,10 +33,19 @@ export default function AiParser(props: AiParserProps) {
         if (!file || parsing || !apiKey) return;
         setParsing(true);
 
-        const arraysExcel = await excelToArrarys(file);
-        const jsonData = await warriors15Aiparser(apiKey, arraysExcel);
-        setParsedData(jsonData);
-        setParsing(false);
+        try {
+            const arraysExcel = await excelToArrarys(file);
+            const jsonData = await warriors15Aiparser(apiKey, arraysExcel);
+            setParsedData(jsonData);
+        } catch (error) {
+            const reason = error instanceof Error ? error.message : '未知错误';
+            messageApi.error(`大模型输出错误（${reason}），请删除当前文件后重新上传`);
+            setParsedData(undefined);
+            onSyncAndPreview(undefined);
+            setFileList([]);
+        } finally {
+            setParsing(false);
+        }
     }
 
     // 上传按钮组件相关函数

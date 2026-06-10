@@ -21,5 +21,14 @@ export async function warriors15Aiparser(key: string, arrayExcel: (string | numb
     } as OpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
     console.log('ai', completion);
 
-    return JSON.parse(completion.choices[0].message.content) as WarriorsDonk;
+    const content = completion.choices[0]?.message.content;
+    if (!content) {
+        throw new Error('AI 未返回有效内容');
+    }
+
+    try {
+        return JSON.parse(content) as WarriorsDonk;
+    } catch {
+        throw new Error('AI 返回内容无法解析为有效 JSON');
+    }
 }
