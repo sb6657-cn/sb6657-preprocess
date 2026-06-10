@@ -34,7 +34,6 @@ export default function AiParser(props: AiParserProps) {
         setParsing(true);
 
         const arraysExcel = await excelToArrarys(file);
-        console.log(2222, arraysExcel);
         const jsonData = await warriors15Aiparser(apiKey, arraysExcel);
         setParsedData(jsonData);
         setParsing(false);

@@ -8,13 +8,18 @@ export async function warriors15Aiparser(key: string, arrayExcel: (string | numb
         apiKey: key,
         dangerouslyAllowBrowser: true,
     });
-    console.log(3333);
 
-    const response = await openai.responses.create({
+    const completion = await openai.chat.completions.create({
+        messages: [
+            { role: 'system', content: warriors15DonkPrompt },
+            { role: 'user', content: JSON.stringify(arrayExcel) },
+        ],
         model: 'deepseek-v4-flash',
-        input: `${warriors15DonkPrompt}\n${JSON.stringify(arrayExcel)}`,
-    });
-    console.log('ai', response);
+        reasoning_effort: 'high',
+        stream: false,
+        // thinking: { type: 'enabled' },
+    } as OpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
+    console.log('ai', completion);
 
-    return JSON.parse(response.output_text) as WarriorsDonk;
+    return JSON.parse(completion.choices[0].message.content) as WarriorsDonk;
 }
