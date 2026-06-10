@@ -6,7 +6,7 @@ import { excelToArrarys } from '@/utils/excel';
 import { downloadJson } from '@/utils/json';
 import { ArrowRightOutlined, DownloadOutlined, EyeOutlined, UploadOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
-import { Alert, BorderBeam, Button, Checkbox, Divider, Input, message, Upload } from 'antd';
+import { BorderBeam, Button, Checkbox, Divider, Input, message, Upload } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import { useEffect, useRef, useState } from 'react';
 import styles from './AiParser.module.scss';
@@ -150,14 +150,14 @@ export default function AiParser(props: AiParserProps) {
             <BorderBeam color={oceanColors}>
                 <div className={styles.container2}>
                     <div className={styles.apiKeySection}>
-                        <div className={styles.ApiInputContainer}>
-                            <span className={styles.ApiInputTitle}>DeepSeek API Key:</span>
-                            <Input.Password className={styles.ApiInput} placeholder="sk-xxxxxxxx" value={apiKey} onChange={(e) => handleApiKeyChange(e.target.value)} autoComplete="off" />
+                        <div className={styles.apiKeyRow}>
+                            <span className={styles.apiKeyLabel}>DeepSeek API Key:</span>
+                            <Input.Password className={styles.apiKeyInput} placeholder="sk-xxxxxxxx" value={apiKey} onChange={(e) => handleApiKeyChange(e.target.value)} autoComplete="off" />
+                            <Checkbox checked={rememberApiKey} onChange={(e) => handleRememberApiKeyChange(e.target.checked)}>
+                                记住key
+                            </Checkbox>
                         </div>
-                        <Checkbox checked={rememberApiKey} onChange={(e) => handleRememberApiKeyChange(e.target.checked)}>
-                            记住 API Key 到当前浏览器
-                        </Checkbox>
-                        <Alert type="warning" showIcon className={styles.apiKeyWarning} message="安全提示" description="勾选后Key会保存到当前浏览器localStorage。请勿在不信任的浏览器环境中填写" />
+                        {rememberApiKey && <span className={styles.apiKeyTip}>勾选后Key会保存到当前浏览器localStorage。请勿在不信任的浏览器环境中填写</span>}
                     </div>
                     <Divider />
                     <div className={styles.uploadAndDownload}>
