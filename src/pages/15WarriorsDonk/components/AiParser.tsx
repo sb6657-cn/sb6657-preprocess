@@ -1,11 +1,12 @@
 import { oceanColors } from '@/static/colors';
 import type { WarriorsDonk } from '@/types/15WarriorsDonk';
+import { getSavedDeepSeekApiKey, saveDeepSeekApiKey } from '@/utils/apiKeyStorage';
 import { warriors15Aiparser } from '@/utils/aiParser';
 import { excelToArrarys } from '@/utils/excel';
 import { downloadJson } from '@/utils/json';
 import { ArrowRightOutlined, DownloadOutlined, EyeOutlined, UploadOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
-import { BorderBeam, Button, Divider, Input, message, Upload } from 'antd';
+import { Alert, BorderBeam, Button, Checkbox, Divider, Input, message, Upload } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import { useEffect, useRef, useState } from 'react';
 import styles from './AiParser.module.scss';
@@ -16,8 +17,10 @@ interface AiParserProps {
 
 export default function AiParser(props: AiParserProps) {
     const { onSyncAndPreview } = props;
+    const [savedApiKey] = useState(getSavedDeepSeekApiKey);
     // ai的api key
-    const [apiKey, setApiKey] = useState('');
+    const [apiKey, setApiKey] = useState(savedApiKey);
+    const [rememberApiKey, setRememberApiKey] = useState(!!savedApiKey);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
     const excelFile = fileList[0];
@@ -33,12 +36,36 @@ export default function AiParser(props: AiParserProps) {
 
     // ai输出内容的ref，主要用于自动滚动到最底部
     const streamOutputRef = useRef<HTMLPreElement>(null);
+
     useEffect(() => {
         const streamOutput = streamOutputRef.current;
         if (!streamOutput) return;
 
         streamOutput.scrollTop = streamOutput.scrollHeight;
     }, [streamContent, reasoningContent]);
+
+    function saveApiKeyToStorage(nextApiKey: string) {
+        const saved = saveDeepSeekApiKey(nextApiKey);
+        if (!saved) {
+            messageApi.warning('当前浏览器不允许保存 API Key，本次仅临时使用');
+        }
+    }
+
+    function handleApiKeyChange(nextApiKey: string) {
+        setApiKey(nextApiKey);
+        if (rememberApiKey) {
+            saveApiKeyToStorage(nextApiKey);
+        }
+    }
+
+    function handleRememberApiKeyChange(checked: boolean) {
+        setRememberApiKey(checked);
+        if (checked) {
+            saveApiKeyToStorage(apiKey);
+        } else {
+            saveApiKeyToStorage('');
+        }
+    }
 
     // 解析excel相关函数
     async function parseExcel(file: File) {
@@ -122,9 +149,15 @@ export default function AiParser(props: AiParserProps) {
             {contextHolder}
             <BorderBeam color={oceanColors}>
                 <div className={styles.container2}>
-                    <div className={styles.ApiInputContainer}>
-                        <span className={styles.ApiInputTitle}>DeepSeek API Key:</span>
-                        <Input className={styles.ApiInput} placeholder="sk-xxxxxxxx" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
+                    <div className={styles.apiKeySection}>
+                        <div className={styles.ApiInputContainer}>
+                            <span className={styles.ApiInputTitle}>DeepSeek API Key:</span>
+                            <Input.Password className={styles.ApiInput} placeholder="sk-xxxxxxxx" value={apiKey} onChange={(e) => handleApiKeyChange(e.target.value)} autoComplete="off" />
+                        </div>
+                        <Checkbox checked={rememberApiKey} onChange={(e) => handleRememberApiKeyChange(e.target.checked)}>
+                            记住 API Key 到当前浏览器
+                        </Checkbox>
+                        <Alert type="warning" showIcon className={styles.apiKeyWarning} message="安全提示" description="勾选后Key会保存到当前浏览器localStorage。请勿在不信任的浏览器环境中填写" />
                     </div>
                     <Divider />
                     <div className={styles.uploadAndDownload}>

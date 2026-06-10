@@ -4,12 +4,23 @@
         padding: 20px 40px;
         border: #f3f3f3 solid 1px;
         border-radius: 10px;
+        .apiKeySection {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            .apiKeyWarning {
+                font-size: 12px;
+            }
+        }
         .ApiInputContainer {
             display: flex;
             align-items: center;
             gap: 10px;
             .ApiInputTitle {
                 white-space: nowrap;
+            }
+            .ApiInput {
+                flex: 1;
             }
         }
         .uploadAndDownload {
