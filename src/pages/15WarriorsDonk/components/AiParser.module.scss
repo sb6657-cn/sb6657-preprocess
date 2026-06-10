@@ -44,6 +44,31 @@
             .rightArrow {
                 font-size: 40px;
             }
+            .download {
+                max-width: 240px;
+                display: flex;
+                justify-content: center;
+                .streamOutput {
+                    width: 100%;
+                    .streamTitle {
+                        margin-bottom: 8px;
+                        color: #6b7280;
+                        font-size: 12px;
+                    }
+                    .streamContent {
+                        max-height: 240px;
+                        margin: 0;
+                        padding: 12px;
+                        overflow: auto;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 8px;
+                        background: #f9fafb;
+                        font-size: 10px;
+                        white-space: pre-wrap;
+                        word-break: break-word;
+                    }
+                }
+            }
         }
         .previewContainer {
             width: 100%;

@@ -7,7 +7,7 @@ import { ArrowRightOutlined, DownloadOutlined, EyeOutlined, UploadOutlined } fro
 import type { UploadFile } from 'antd';
 import { BorderBeam, Button, Divider, Input, message, Upload } from 'antd';
 import type { RcFile } from 'antd/es/upload';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './AiParser.module.scss';
 
 interface AiParserProps {
@@ -23,19 +23,37 @@ export default function AiParser(props: AiParserProps) {
     const excelFile = fileList[0];
     const [parsing, setParsing] = useState(false);
     const [parsedData, setParsedData] = useState<WarriorsDonk>();
+    // ai输出内容
+    const [streamContent, setStreamContent] = useState('');
+    const [reasoningContent, setReasoningContent] = useState('');
     const beforeOpenFile = fileList.length < 1 && !!apiKey;
     // 输入框填写的标题和日期
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
 
+    // ai输出内容的ref，主要用于自动滚动到最底部
+    const streamOutputRef = useRef<HTMLPreElement>(null);
+    useEffect(() => {
+        const streamOutput = streamOutputRef.current;
+        if (!streamOutput) return;
+
+        streamOutput.scrollTop = streamOutput.scrollHeight;
+    }, [streamContent, reasoningContent]);
+
     // 解析excel相关函数
     async function parseExcel(file: File) {
         if (!file || parsing || !apiKey) return;
         setParsing(true);
+        setParsedData(undefined);
+        setStreamContent('');
+        setReasoningContent('');
 
         try {
             const arraysExcel = await excelToArrarys(file);
-            const jsonData = await warriors15Aiparser(apiKey, arraysExcel);
+            const jsonData = await warriors15Aiparser(apiKey, arraysExcel, ({ content, reasoningContent }) => {
+                setStreamContent(content);
+                setReasoningContent(reasoningContent);
+            });
             setParsedData(jsonData);
         } catch (error) {
             const reason = error instanceof Error ? error.message : '未知错误';
@@ -60,6 +78,8 @@ export default function AiParser(props: AiParserProps) {
     function handleRemove(file: UploadFile) {
         setFileList((current) => current.filter((item) => item.uid !== file.uid));
         setParsedData(undefined);
+        setStreamContent('');
+        setReasoningContent('');
         onSyncAndPreview(undefined);
         setParsing(false);
     }
@@ -127,8 +147,15 @@ export default function AiParser(props: AiParserProps) {
                         </div>
                         <ArrowRightOutlined className={styles.rightArrow} />
                         <div className={styles.download}>
-                            {!excelFile && <span>请上传 .xlsx 文件</span>}
-                            {parsing && <span>正在解析 Excel...大模型输出较慢请耐心等待</span>}
+                            {!excelFile && !streamContent && !reasoningContent && <span>请上传 .xlsx 文件</span>}
+                            {parsing && (
+                                <div className={styles.streamOutput}>
+                                    <div className={styles.streamTitle}>{streamContent ? '正在生成JSON, 输出完成后会自动解析' : 'AI正在思考，稍后开始输出 JSON'}</div>
+                                    <pre ref={streamOutputRef} className={styles.streamContent}>
+                                        <code>{streamContent || reasoningContent || '等待AI开始输出...'}</code>
+                                    </pre>
+                                </div>
+                            )}
                             {!parsing && parsedData && (
                                 <Button icon={<DownloadOutlined />} onClick={downloadFile}>
                                     下载json
