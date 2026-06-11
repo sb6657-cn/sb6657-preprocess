@@ -2,8 +2,8 @@ import type { WarriorsDonk } from '@/types/15WarriorsDonk';
 import { useEffect, useRef, useState } from 'react';
 import styles from './Preview.module.scss';
 
-const PREVIEW_URL = 'https://sb6657.cn/?preview=1#/15warriorsDonk';
-// const PREVIEW_URL = 'http://localhost:5174/?preview=1#/15warriorsDonk';
+const PREVIEW_URL = 'https://sb6657.cn/15warriorsDonk?preview=1';
+// const PREVIEW_URL = 'http://localhost:5174/15warriorsDonk?preview=1';
 const PREVIEW_ORIGIN = new URL(PREVIEW_URL).origin;
 
 interface PreviewProps {
