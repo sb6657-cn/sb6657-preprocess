@@ -37,6 +37,22 @@
     line-height: 1.7;
 }
 
+.tip {
+    max-width: 680px;
+    margin: 8px 0 0;
+    color: #66758a;
+    font-size: 13px;
+    line-height: 1.6;
+
+    code {
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: #e8edf2;
+        color: #3d5a80;
+        font-size: 12px;
+    }
+}
+
 .baseUrl {
     min-width: 340px;
     padding: 12px 14px;

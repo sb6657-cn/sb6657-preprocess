@@ -11,6 +11,10 @@ export default function ApiCatalog() {
                     <p className={styles.eyebrow}>PUBLIC API</p>
                     <h1>sb6657 开源接口一览</h1>
                     <p className={styles.intro}>按功能整理常用公开接口，方便查询、接入和二次开发。</p>
+                    <p className={styles.tip}>
+                        第三方工具调用后端接口时，请勿携带 sb6657.cn 前端自带的 <code>dpahjdoiaw</code>
+                        请求头，它仅用于后端统计来源，避免来源统计被算错。
+                    </p>
                 </div>
                 <aside className={styles.baseUrl}>
                     <span>接口根地址</span>
