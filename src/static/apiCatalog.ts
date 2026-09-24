@@ -14,7 +14,7 @@ export interface ApiSection {
     endpoints: ApiEndpoint[];
 }
 
-export const apiBaseUrl = 'https://hguofichp.cn:10086';
+export const apiBaseUrl = 'https://api.hguofichp.cn';
 
 export const apiSections: ApiSection[] = [
     {
